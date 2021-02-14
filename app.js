@@ -19,13 +19,18 @@ const showImages = (images) => {
   gallery.innerHTML = '';
   // show gallery title
   galleryHeader.style.display = 'flex';
-  images.forEach(image => {
-    let div = document.createElement('div');
-    div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
-    div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
-    gallery.appendChild(div);
-  })
-
+  
+    images.forEach(image => {
+      let div = document.createElement('div');
+      div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
+      div.innerHTML = `
+      <img class="img-fluid img-thumbnail mb-2" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">
+      <button class="btn btn-primary btn-sm ml-2 mr-5 mt-2"><i class="fas fa-download text-white mx-1"></i>${image.downloads}</button>
+      <button class="btn btn-danger btn-sm ml-4 mt-2"><i class="fas fa-thumbs-up text-white mx-1"></i>${image.likes}</button>
+      `;
+      gallery.appendChild(div);
+    })    
+  toggleSpinner();
 }
 
 //Search  enter button setup
@@ -36,7 +41,9 @@ document.getElementById("search").addEventListener("keypress", (event)=>{
 })
 
 const getImages = (query) => {
+  toggleSpinner();
   fetch(`https://pixabay.com/api/?key=${KEY}&q=${query}&image_type=photo&pretty=true`)
+  
     .then(response => response.json())
     .then(data => showImages(data.hits))
     .catch(err => console.log(err))
@@ -72,23 +79,25 @@ const createSlider = () => {
   <span class="prev" onclick="changeItem(-1)"><i class="fas fa-chevron-left"></i></span>
   <span class="next" onclick="changeItem(1)"><i class="fas fa-chevron-right"></i></span>
   `;
-
   sliderContainer.appendChild(prevNext)
   document.querySelector('.main').style.display = 'block';
-  // hide image aria
+  // hide image area
   imagesArea.style.display = 'none';
+ 
   const duration = document.getElementById('duration').value || 1000;
   //slide time duration validation
-  if(duration<1000)
+  if(duration<0)
   {
-    alert("At least enter 1000 duration value !");
+    alert("At least enter 1000ms duration value !");
     imagesArea.style.display = 'block';
   }
   else{
     sliders.forEach(slide => {
       let item = document.createElement('div')
       item.className = "slider-item";
-      item.innerHTML = `<img class="w-100"
+      item.innerHTML = `
+      <div class="mb-3"><button class="btn btn-dark"><a href="index.html" class="text-decoration-none text-white">Back</a></button></div>
+      <img class="w-100"
       src="${slide}"
       alt="">`;
       sliderContainer.appendChild(item);
@@ -139,3 +148,11 @@ searchBtn.addEventListener('click', function () {
 sliderBtn.addEventListener('click', function () {
   createSlider();
 })
+
+//toggle spinner
+const toggleSpinner =() =>{
+  const spinner =document.getElementById('loading-spinner');
+  spinner.classList.toggle('d-none');
+}
+
+
