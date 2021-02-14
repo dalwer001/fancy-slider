@@ -88,7 +88,7 @@ const createSlider = () => {
   //slide time duration validation
   if(duration<0)
   {
-    alert("At least enter 1000ms duration value !");
+    alert("Please! At least enter 1000 duration value.");
     imagesArea.style.display = 'block';
   }
   else{
