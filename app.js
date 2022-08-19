@@ -149,6 +149,7 @@ sliderBtn.addEventListener('click', function () {
   createSlider();
 })
 
+
 //toggle spinner
 const toggleSpinner =() =>{
   const spinner =document.getElementById('loading-spinner');
